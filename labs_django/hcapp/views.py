@@ -144,7 +144,8 @@ def get_totals( results ):
                         'votes': 0
                         }
             totals_tmp[initials]['result'] += party['result']
-            totals_tmp[initials]['votes'] += party['votes']
+            if district != 'national_circle':
+                totals_tmp[initials]['votes'] += party['votes']
     results[ 'total' ] = [ totals_tmp[ r ] for r in totals_tmp ]
 
 def get_national_circle_votes( national_circle_result, results):
