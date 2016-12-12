@@ -30,7 +30,7 @@ from mix_utils import fetch_url
 ## Configuration
 ##
 
-BDP_SOURCE_URL = 'http://www.bportugal.pt/en-US/Estatisticas/Dominios Estatisticos/EstatisticasCambiais/Documents/cambdia.csv'
+BDP_SOURCE_URL = 'https://www.bportugal.pt/sites/default/files/taxas-relacionados/cambdia.csv'
 
 ##
 ## Utils
