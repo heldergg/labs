@@ -15,6 +15,8 @@ class Meeting(models.Model):
     schedule_url   = models.URLField()
     legistature    = models.ForeignKey(Legislature)
     meeting_type   = models.ForeignKey(MeetingType)
+    class Meta:
+        unique_together = ('number', 'legistature')
 
 class Member(models.Model):
     name = models.CharField(max_length=64)
@@ -24,7 +26,10 @@ class Party(models.Model):
     name = models.CharField(max_length=32)
 
 class Attendance(models.Model):
-    member = ForeignKey(Member)
-    party = ForeignKey(Party)
-    attendance = models.CharField(max_length=64)
+    meeting = models.ForeignKey(Meeting)
+    member = models.ForeignKey(Member)
+    party = models.ForeignKey(Party)
+    status = models.CharField(max_length=64)
     reason = models.CharField(max_length=64)
+    class Meta:
+        unique_together = ('meeting', 'member')
