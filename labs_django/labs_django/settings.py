@@ -133,6 +133,9 @@ INSTALLED_APPS = (
     # Money devaluation app
     'devaluationapp',
 
+    # Potuguese MP time sheet
+    'timeclockapp',
+
 )
 
 ##
