@@ -241,8 +241,8 @@ class ParlamentoIndex:
                 break
 
 
-def attendance(meeting):
-    url = ATTENDANCEURL + meeting['attendance_bid']
+def attendance_read(meeting):
+    url = ATTENDANCEURL + str(meeting['attendance_bid'])
     request = requests.get(url, verify=False)
     html = request.text
     soup = BeautifulSoup(html, 'lxml')
@@ -255,6 +255,6 @@ def attendance(meeting):
                'name': cells[0].a.renderContents(),
                'mp_bid': int(cells[0].a['href'].split('=')[1]),
                'party': cells[1].span.renderContents(),
-               'attendance': cells[2].span.renderContents(),
+               'status': cells[2].span.renderContents(),
                'reason': cells[3].span.renderContents(),
                }
