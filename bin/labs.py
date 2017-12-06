@@ -81,7 +81,7 @@ if __name__ == '__main__':
             from django.core.exceptions import ObjectDoesNotExist
             from django.db import IntegrityError
 
-            for meeting_data in ParlamentoIndex(legislature='VI').meetings():
+            for meeting_data in ParlamentoIndex().meetings():
                 # Process meeting
                 try:
                     legislature = Legislature.objects.get(
@@ -139,6 +139,31 @@ if __name__ == '__main__':
                         attendance.save()
                     except IntegrityError:
                         pass
+            sys.exit()
+        elif o == '--export_time_sheet':
+            from timeclockapp.models import Meeting, Attendance
+            from mix_utils import UnicodeWriter
+            import csv
+
+            with open(a, 'w') as csvfile:
+                writer = UnicodeWriter(csvfile, quoting=csv.QUOTE_MINIMAL)
+                for attendance in Attendance.objects.all().order_by('meeting__date'):
+                    meeting = attendance.meeting
+                    writer.writerow([
+                        meeting.legistature.number,
+                        meeting.date.isoformat(),
+                        "%d" % meeting.number,
+                        "%d" % meeting.attendance_bid,
+                        meeting.meeting_type.name,
+                        attendance.member.name,
+                        "%d" % attendance.member.mp_bid,
+                        attendance.party.name,
+                        attendance.status,
+                        attendance.reason
+                        ])
+
+            print("#"*80)
+            print(a)
 
             sys.exit()
 
