@@ -16,7 +16,7 @@ class Meeting(models.Model):
     legistature    = models.ForeignKey(Legislature)
     meeting_type   = models.ForeignKey(MeetingType)
     class Meta:
-        unique_together = ('number', 'legistature')
+        unique_together = ('date', 'number', 'legistature', 'meeting_type')
 
 class Member(models.Model):
     name = models.CharField(max_length=64)
