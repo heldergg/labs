@@ -62,6 +62,7 @@ Example usage:
 # Imports
 ##
 
+from __future__ import print_function
 from bs4 import BeautifulSoup
 import requests
 import urllib3
@@ -88,6 +89,8 @@ ATTENDANCEURL = ('https://www.parlamento.pt/DeputadoGP/Paginas/DetalheReuniaoPle
 SITEWSDL = 'https://www.parlamento.pt/DeputadoGP/_vti_bin/sites.asmx?wsdl'
 
 FORMID = 'ctl00$ctl43$g_90441d47_53a9_460e_a62f_b50c50d57276$ctl00$'
+
+verbose = True
 
 ##
 # Errors
@@ -122,7 +125,7 @@ class ParlamentoIndex:
     when no more pages are available, jumping to the previous session and
     repeating the process.
     '''
-    def __init__(self):
+    def __init__(self, legislature=None):
         # Open the connection
         self.connection = ParlamentoConn()
         # Get the legislature list and a soupified version of the first index
@@ -132,7 +135,14 @@ class ParlamentoIndex:
         self.legislatures = self.get_legislatures()
         self.legislatures.reverse()
         self.current_legislature = self.legislatures.pop()
-        self.page_number = 2
+        while legislature:
+            if legislature != self.current_legislature:
+                self.current_legislature = self.legislatures.pop()
+            else:
+                # A specific legislature was chosen
+                self.read_next_legislature()
+                break
+        self.next_page = 2
 
     def get_legislatures(self):
         return [lg['value']
@@ -145,6 +155,10 @@ class ParlamentoIndex:
                 'tr', {'class': ['ARTabResultadosLinhaPar',
                                  'ARTabResultadosLinhaImpar']}):
             cells = line.find_all('td')
+            try:
+                schedule_url = cells[1].find_all('a')[-1]['href']
+            except KeyError:
+                schedule_url = ''
             yield {
                    'legislature': self.current_legislature,
                    'date': datetime.datetime.strptime(
@@ -152,16 +166,17 @@ class ParlamentoIndex:
                    'attendance_bid': int(cells[0].a['href'].split('=')[1]),
                    'number': int(cells[1].a.renderContents()),
                    'type': cells[2].renderContents(),
-                   'schedule_url': cells[1].a['href']
+                   'schedule_url': schedule_url
                    }
 
-    def read_next_page(self):
+    def get_form_values(self, switch_legislature=False):
         form = self.soup.find('form', {'id': 'aspnetForm'})
         form_input = form.findAll('input')
         form_values = {}
         for el in form_input:
             if el['id'] != 'pesquisa':
-                if el['name'] == (FORMID + 'btnPesquisar'):
+                if (el['name'] == (FORMID + 'btnPesquisar') and
+                    not switch_legislature):
                     continue
                 try:
                     form_values[el['name']] = el['value']
@@ -169,9 +184,14 @@ class ParlamentoIndex:
                     form_values[el['name']] = ''
 
         form_values[FORMID + 'ddlLegislatura'] = self.current_legislature
-        form_values['__EVENTARGUMENT'] = 'Page$%d' % self.page_number
-        form_values['__EVENTTARGET'] = FORMID + 'gvResults'
-        form_values['ctl00$ScriptManager'] = FORMID + 'pnlUpdate|' + FORMID + 'gvResults'
+        if switch_legislature:
+            form_values['ctl00$ScriptManager'] = FORMID + 'pnlUpdate|' + FORMID + 'btnPesquisar'
+            form_values['__EVENTARGUMENT'] = ''
+            form_values['__EVENTTARGET'] = ''
+        else:
+            form_values['__EVENTARGUMENT'] = 'Page$%d' % self.next_page
+            form_values['__EVENTTARGET'] = FORMID + 'gvResults'
+            form_values['ctl00$ScriptManager'] = (FORMID + 'pnlUpdate|' + FORMID + 'gvResults')
 
         # Get the digest necessary to post the query
         # https://msdn.microsoft.com/en-us/library/dd930042(v=office.12).aspx
@@ -179,55 +199,43 @@ class ParlamentoIndex:
         client = Client(SITEWSDL, transport=transport)
         digest = client.service.GetUpdatedFormDigest()
         form_values['__REQUESTDIGEST'] = digest
+
+        return form_values
+
+    def read_page(self):
+        form_values = self.get_form_values(switch_legislature=False)
         html = self.connection.session.post(INDEXURL, data=form_values).text
         self.soup = BeautifulSoup(html, 'lxml')
-        self.page_number += 1
 
         if 'Ocorreu um erro inesperado.' in html:
             raise EndOfLegislatureError('Reached the end of the legislature')
 
     def read_next_legislature(self):
         # The last page was an error page, we have to reload the index page
-        # and then change to the next legislature
+        # and then switch to the next legislature
         html = self.connection.session.get(INDEXURL).text
         self.soup = BeautifulSoup(html, 'lxml')
 
-        form = self.soup.find('form', {'id': 'aspnetForm'})
-        form_input = form.findAll('input')
-        form_values = {}
-        for el in form_input:
-            if el['id'] != 'pesquisa':
-                if el['name'] == FORMID + 'btnPesquisar':
-                    continue
-                try:
-                    form_values[el['name']] = el['value']
-                except KeyError:
-                    form_values[el['name']] = ''
-
-        form_values['ctl00$ScriptManager'] = FORMID + 'pnlUpdate|' + FORMID + 'btnPesquisar'
-        form_values[FORMID + 'ddlLegislatura'] = self.current_legislature
-        form_values['__EVENTARGUMENT'] = ''
-        form_values['__EVENTTARGET'] = ''
-        form_values[FORMID + 'btnPesquisar'] = 'Pesquisar'
-
-        # Get the digest necessary to post the query
-        # https://msdn.microsoft.com/en-us/library/dd930042(v=office.12).aspx
-        transport = Transport(session=self.connection.session)
-        client = Client(SITEWSDL, transport=transport)
-        digest = client.service.GetUpdatedFormDigest()
-        form_values['__REQUESTDIGEST'] = digest
-
+        # Read page 1 of the new legislature
+        form_values = self.get_form_values(switch_legislature=True)
         html = self.connection.session.post(INDEXURL, data=form_values).text
         self.soup = BeautifulSoup(html, 'lxml')
 
-
     def get_next_page(self):
         try:
-            self.read_next_page()
+            self.read_page()
+            if verbose:
+                print('* Legislature %s, Reading page %d' % (
+                    self.current_legislature, self.next_page))
+            # Set the next page to be read
+            self.next_page += 1
         except EndOfLegislatureError:
             self.current_legislature = self.legislatures.pop()
             self.read_next_legislature()
-            self.page_number = 2
+            self.next_page = 2
+            if verbose:
+                print('* Switching legislature.')
+                print('  Legislature %s, Read page 1' % self.current_legislature)
 
     def meetings(self):
         while True:
