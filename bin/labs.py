@@ -81,9 +81,7 @@ if __name__ == '__main__':
             from django.core.exceptions import ObjectDoesNotExist
             from django.db import IntegrityError
 
-            for meeting_data in ParlamentoIndex().meetings():
-                if verbose:
-                    print('Reading %s meeting' % meeting_data['date'])
+            for meeting_data in ParlamentoIndex(legislature='VI').meetings():
                 # Process meeting
                 try:
                     legislature = Legislature.objects.get(
@@ -106,15 +104,20 @@ if __name__ == '__main__':
                     meeting.legistature = legislature
                     meeting.meeting_type = meeting_type
                     meeting.save()
+                    if verbose:
+                        print('Reading %s meeting' % meeting_data['date'])
                 except IntegrityError:
                     meeting = Meeting.objects.get(
+                            date=meeting_data['date'],
                             legistature=legislature,
-                            number=meeting_data['number'])
+                            number=meeting_data['number'],
+                            meeting_type=meeting_type)
+                    if verbose:
+                        print('Skipping %s meeting' % meeting_data['date'])
+                        continue
 
                 for mp in attendance_read(meeting_data):
                     # Process MP attendace
-                    if verbose:
-                        print('   Reading MP %s attendance' % mp['name'])
                     try:
                         member = Member.objects.get(mp_bid=mp['mp_bid'])
                     except ObjectDoesNotExist:
