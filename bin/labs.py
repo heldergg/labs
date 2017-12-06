@@ -31,6 +31,8 @@ def usage():
         -h
         --help              This help screen
 
+    Option:
+        --verbose           Verbose output
     ''' % { 'script_name': sys.argv[0] }
 
 
@@ -69,7 +71,8 @@ if __name__ == '__main__':
 
             sys.exit()
 
-        elif o == '--read_time_sheet':
+        elif o == '--read_time_sheet' or o == '--update_time_sheet':
+            import parlamento.scraper
             from parlamento.scraper import ParlamentoIndex, attendance_read
             from timeclockapp.models import (
                     MeetingType,
@@ -80,6 +83,9 @@ if __name__ == '__main__':
                     Attendance)
             from django.core.exceptions import ObjectDoesNotExist
             from django.db import IntegrityError
+
+            update = o == '--update_time_sheet'
+            parlamento.scraper.verbose = verbose
 
             for meeting_data in ParlamentoIndex().meetings():
                 # Process meeting
@@ -113,8 +119,12 @@ if __name__ == '__main__':
                             number=meeting_data['number'],
                             meeting_type=meeting_type)
                     if verbose:
-                        print('Skipping %s meeting' % meeting_data['date'])
-                        continue
+                        print('Skipping %s meeting' % meeting.date.isoformat())
+                    if verbose and update:
+                        print('Update done')
+                    if update:
+                        break
+                    continue
 
                 for mp in attendance_read(meeting_data):
                     # Process MP attendace
@@ -139,7 +149,10 @@ if __name__ == '__main__':
                         attendance.save()
                     except IntegrityError:
                         pass
+                if verbose:
+                    print('Done')
             sys.exit()
+
         elif o == '--export_time_sheet':
             from timeclockapp.models import Meeting, Attendance
             from mix_utils import UnicodeWriter
@@ -161,10 +174,6 @@ if __name__ == '__main__':
                         attendance.status,
                         attendance.reason
                         ])
-
-            print("#"*80)
-            print(a)
-
             sys.exit()
 
     # Show the help screen if no commands given
