@@ -2,8 +2,9 @@
 
 from django.db import models
 
-class Party( models.Model ):
-    name     = models.CharField(max_length=128)
+
+class Party(models.Model):
+    name = models.CharField(max_length=128)
     initials = models.CharField(max_length=64, unique=True)
 
     wikipedia = models.CharField(max_length=128, null=True)
@@ -14,14 +15,16 @@ class Party( models.Model ):
     color_1 = models.CharField(max_length=32)
     color_2 = models.CharField(max_length=32)
 
-class District( models.Model ):
+
+class District(models.Model):
     name = models.CharField(max_length=64)
     code = models.IntegerField(unique=True)
 
     def __str__(self):
         return 'District object: %s' % self.name
 
-class ElectionResult( models.Model ):
+
+class ElectionResult(models.Model):
     district = models.ForeignKey(District)
     party = models.ForeignKey(Party)
 
@@ -36,7 +39,8 @@ class ElectionResult( models.Model ):
     class Meta:
         unique_together = ('district', 'party', 'election_type', 'date')
 
-class ElectionStats( models.Model ):
+
+class ElectionStats(models.Model):
     district = models.ForeignKey(District)
 
     date = models.DateField()

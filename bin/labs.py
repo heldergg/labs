@@ -19,6 +19,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'labs_django.settings'
 import django
 django.setup()
 
+
 def usage():
     print '''Usage: %(script_name)s [options]\n
     Commands:
@@ -33,20 +34,20 @@ def usage():
 
     Option:
         --verbose           Verbose output
-    ''' % { 'script_name': sys.argv[0] }
+    ''' % {'script_name': sys.argv[0]}
 
 
 if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                    'hv',
+                                   'hv',
                                    ['help',
                                     'read_change',
                                     'export_time_sheet=',
                                     'read_time_sheet',
                                     'update_time_sheet',
                                     'verbose',
-                                   ])
+                                    ])
     except getopt.GetoptError, err:
         print str(err)
         print
@@ -75,12 +76,12 @@ if __name__ == '__main__':
             import parlamento.scraper
             from parlamento.scraper import ParlamentoIndex, attendance_read
             from timeclockapp.models import (
-                    MeetingType,
-                    Legislature,
-                    Meeting,
-                    Member,
-                    Party,
-                    Attendance)
+                MeetingType,
+                Legislature,
+                Meeting,
+                Member,
+                Party,
+                Attendance)
             from django.core.exceptions import ObjectDoesNotExist
             from django.db import IntegrityError
 
@@ -91,22 +92,22 @@ if __name__ == '__main__':
                 # Process meeting
                 try:
                     legislature = Legislature.objects.get(
-                            number=meeting_data['legislature'])
+                        number=meeting_data['legislature'])
                 except ObjectDoesNotExist:
                     legislature = Legislature(number=meeting_data['legislature'])
                     legislature.save()
                 try:
                     meeting_type = MeetingType.objects.get(
-                            name=meeting_data['type'])
+                        name=meeting_data['type'])
                 except ObjectDoesNotExist:
                     meeting_type = MeetingType(name=meeting_data['type'])
                     meeting_type.save()
                 try:
                     meeting = Meeting(
-                            date=meeting_data['date'],
-                            number=meeting_data['number'],
-                            attendance_bid=meeting_data['attendance_bid'],
-                            schedule_url=meeting_data['schedule_url'])
+                        date=meeting_data['date'],
+                        number=meeting_data['number'],
+                        attendance_bid=meeting_data['attendance_bid'],
+                        schedule_url=meeting_data['schedule_url'])
                     meeting.legistature = legislature
                     meeting.meeting_type = meeting_type
                     meeting.save()
@@ -114,10 +115,10 @@ if __name__ == '__main__':
                         print('Reading %s meeting' % meeting_data['date'])
                 except IntegrityError:
                     meeting = Meeting.objects.get(
-                            date=meeting_data['date'],
-                            legistature=legislature,
-                            number=meeting_data['number'],
-                            meeting_type=meeting_type)
+                        date=meeting_data['date'],
+                        legistature=legislature,
+                        number=meeting_data['number'],
+                        meeting_type=meeting_type)
                     if verbose:
                         print('Skipping %s meeting' % meeting.date.isoformat())
                     if verbose and update:
@@ -132,7 +133,7 @@ if __name__ == '__main__':
                         member = Member.objects.get(mp_bid=mp['mp_bid'])
                     except ObjectDoesNotExist:
                         member = Member(
-                                name=mp['name'], mp_bid=mp['mp_bid'])
+                            name=mp['name'], mp_bid=mp['mp_bid'])
                         member.save()
                     try:
                         party = Party.objects.get(name=mp['party'])
@@ -173,7 +174,7 @@ if __name__ == '__main__':
                         attendance.party.name,
                         attendance.status,
                         attendance.reason
-                        ])
+                    ])
             sys.exit()
 
     # Show the help screen if no commands given

@@ -21,6 +21,7 @@ MAXCYCLE = 10000
 # Exception
 ##
 
+
 class ChairError(Exception):
     pass
 
@@ -28,13 +29,15 @@ class ChairError(Exception):
 # Hemicycle calculus
 ##
 
+
 class Hemicycle(object):
     '''
     This class makes the necessary calculations to define an hemicycle filled
     with chairs.
     '''
-    def __init__(self, chair_width, chair_height, nchairs = 230,
-                 nrows = 8, hangle=pi):
+
+    def __init__(self, chair_width, chair_height, nchairs=230,
+                 nrows=8, hangle=pi):
         self.chair_width = float(chair_width) / 2
         self.chair_height = float(chair_height)
         self.hangle = hangle
@@ -51,7 +54,7 @@ class Hemicycle(object):
     def heigh(self):
         '''Hemicycle height'''
         if self.start_angle <= 0:
-            return self.outer_radius * (1 -  sin( self.start_angle ))
+            return self.outer_radius * (1 - sin(self.start_angle))
         else:
             return self.outer_radius - self.inner_radius * sin(self.start_angle)
 
@@ -87,7 +90,7 @@ class Hemicycle(object):
         if self.b:
             return self.b
 
-        def calc_chairs( b ):
+        def calc_chairs(b):
             '''
             For a given b, calculates the number of possible chairs on the
             hemicycle. Being b the distance from the centre to the first
@@ -96,7 +99,7 @@ class Hemicycle(object):
             N = 0
             for row in range(self.nrows):
                 b_tmp = b + self.chair_height * row
-                N += self.chairs_per_row( b_tmp )
+                N += self.chairs_per_row(b_tmp)
             return floor(N)
 
         ncycle = 0
@@ -111,7 +114,7 @@ class Hemicycle(object):
             if b <= 0:
                 raise ChairError('Could not find a solution. Aborting.')
 
-            N = calc_chairs( b )
+            N = calc_chairs(b)
 
             if N == target:
                 break
@@ -130,7 +133,7 @@ class Hemicycle(object):
         self.b = b
         return b
 
-    inner_radius = property( solve_b )
+    inner_radius = property(solve_b)
 
     def row_radius(self, row):
         return self.inner_radius + self.chair_height * row
@@ -148,11 +151,11 @@ class Hemicycle(object):
             row = {}
             row['number'] = r + 1
             row['radius'] = self.row_radius(r)
-            row['nchairs'] = int(self.chairs_per_row( row['radius'] ))
+            row['nchairs'] = int(self.chairs_per_row(row['radius']))
 
             yield row
 
-    def chair_location(self, row, column ):
+    def chair_location(self, row, column):
         '''Returns the angle of the chair (in order to point to the center of
         the hemicycle and its x,y coordinate. The origin of the coordinate
         system used is the hemicycle center'''
@@ -160,19 +163,18 @@ class Hemicycle(object):
         chair_angle = self.start_angle() + self.hangle - (self.row_angle(row) * column)
         radius = self.row_radius(row)
 
-        x = cos( chair_angle ) * radius
-        y = sin( chair_angle ) * radius
+        x = cos(chair_angle) * radius
+        y = sin(chair_angle) * radius
 
         return chair_angle, x, y
 
 
-
 if __name__ == '__main__':
-    hc = Hemicycle( chair_width = 60,
-                    chair_height = 60,
-                    nchairs = 230,
-                    nrows = 8,
-                    hangle = pi )
+    hc = Hemicycle(chair_width=60,
+                   chair_height=60,
+                   nchairs=230,
+                   nrows=8,
+                   hangle=pi)
 
     print 'Inner radius: ', hc.inner_radius
     print

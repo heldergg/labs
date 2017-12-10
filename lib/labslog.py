@@ -2,7 +2,8 @@
 
 '''Logging facilities'''
 
-import sys, os
+import sys
+import os
 
 sys.path.append(os.path.abspath('../labs_django'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'labs_django.settings'
@@ -13,7 +14,7 @@ import logging
 
 
 ##
-## Logging setup
+# Logging setup
 ##
 
 # create logger
@@ -24,7 +25,7 @@ logger.setLevel(logging.DEBUG)
 ch = logging.FileHandler(settings.LOGFILE)
 ch.setLevel(logging.INFO)
 
-consoleh = logging.StreamHandler( sys.stdout )
+consoleh = logging.StreamHandler(sys.stdout)
 consoleh.setLevel(logging.DEBUG)
 
 # create formatter
@@ -37,4 +38,3 @@ consoleh.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
 logger.addHandler(consoleh)
-

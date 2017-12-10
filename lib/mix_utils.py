@@ -20,11 +20,13 @@ from labserror import LabsError
 
 ######################################################################
 
-def debug_unicode( st ):
-    if isinstance( st, unicode):
-        return unicodedata.normalize('NFKD', st).encode('ascii','ignore')
+
+def debug_unicode(st):
+    if isinstance(st, unicode):
+        return unicodedata.normalize('NFKD', st).encode('ascii', 'ignore')
     else:
-        return unicodedata.normalize('NFKD', unicode( st, 'ascii', 'ignore')).encode('ascii')
+        return unicodedata.normalize('NFKD', unicode(st, 'ascii', 'ignore')).encode('ascii')
+
 
 du = debug_unicode
 
@@ -63,29 +65,32 @@ class UnicodeWriter:
 
 ######################################################################
 
+
 # Socket timeout in seconds
 socket.setdefaulttimeout(60)
 MAXREPEAT = 2
 
+
 class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_301(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_301(
-                        self, req, fp, code, msg, headers)
+            self, req, fp, code, msg, headers)
 
         result.status = code
-        logger.debug('Redirect URL (301): %s' %  result.url)
+        logger.debug('Redirect URL (301): %s' % result.url)
         return result
 
     def http_error_302(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_302(
-                        self, req, fp, code, msg, headers)
+            self, req, fp, code, msg, headers)
 
         result.status = code
-        logger.debug('Redirect URL (302): %s' %  result.url)
+        logger.debug('Redirect URL (302): %s' % result.url)
 
         return result
 
-def fetch_url( url, data=None, cj=None ):
+
+def fetch_url(url, data=None, cj=None):
     # Treat url
     url_object = list(urlparse.urlsplit(url))
     if u'\xba' in url_object[2]:
@@ -100,11 +105,12 @@ def fetch_url( url, data=None, cj=None ):
             logger.debug('Getting: %s' % url)
             request = urllib2.Request(url, data)
             request.add_header('Accept-Encoding', 'gzip; q=1.0, identity; q=0.5')
-            request.add_header('User-agent', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; chromeframe/11.0.696.57)')
+            request.add_header(
+                'User-agent', 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; chromeframe/11.0.696.57)')
             if not cj:
                 cj = cookielib.LWPCookieJar()
-            opener = urllib2.build_opener(SmartRedirectHandler(), urllib2.HTTPCookieProcessor(cj) )
-            resource = opener.open( request )
+            opener = urllib2.build_opener(SmartRedirectHandler(), urllib2.HTTPCookieProcessor(cj))
+            resource = opener.open(request)
             is_gzip = resource.headers.get('Content-Encoding') == 'gzip'
 
             payload = resource.read()
@@ -132,7 +138,8 @@ def fetch_url( url, data=None, cj=None ):
         except urllib2.URLError, msg:
             repeat += 1
             if repeat > MAXREPEAT:
-                logger.critical('HTTP Error! Aborting. Error repeated %d times: %s' % (MAXREPEAT, msg) )
+                logger.critical('HTTP Error! Aborting. Error repeated %d times: %s' %
+                                (MAXREPEAT, msg))
                 raise DREError('Error condition on the site')
             if 'Error 400' in str(msg) or 'Error 404' in str(msg):
                 logger.critical('HTTP Error 40x - URL: %s' % url)

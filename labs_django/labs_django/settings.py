@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ##
-## DEBUG
+# DEBUG
 ##
 
 DEBUG = False
@@ -9,15 +9,15 @@ TEMPLATE_DEBUG = DEBUG
 
 
 ##
-## BASE PATHS
+# BASE PATHS
 ##
 
 import os.path
-project_dir = os.path.abspath ( os.path.join( os.path.dirname( __file__ ), '../..' ))
-django_dir = os.path.abspath ( os.path.join( os.path.dirname( __file__ ), '..' ))
+project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+django_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ##
-## Site admins
+# Site admins
 ##
 
 ADMINS = (
@@ -27,13 +27,13 @@ ADMINS = (
 MANAGERS = ADMINS
 
 ##
-## Databases
+# Databases
 ##
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql',
-                                         # 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'mysql',
+        # 'sqlite3' or 'oracle'.
         'NAME': '',                      # Or path to database file if using
                                          # sqlite3.
         # The following settings are not used with sqlite3:
@@ -47,7 +47,7 @@ DATABASES = {
 }
 
 ##
-## HTTP
+# HTTP
 ##
 
 ALLOWED_HOSTS = []
@@ -55,7 +55,7 @@ SITE_ID = 1
 SECRET_KEY = 'qvzx6=g4h7*&cyvaf!=l_n@#hzk&8kre*(yns*10$@n7@@@$ok'
 
 ##
-## Lang and timezone:
+# Lang and timezone:
 ##
 
 TIME_ZONE = 'Europe/Lisbon'
@@ -70,7 +70,7 @@ USE_TZ = True
 
 MEDIA_ROOT = ''             # User uploaded files (abs path)
 MEDIA_URL = ''              # URL that serves MEDIA_ROOT files (end with '/')
-STATIC_ROOT = os.path.join( project_dir, 'collected_static' )
+STATIC_ROOT = os.path.join(project_dir, 'collected_static')
 STATIC_URL = '/static/'     # Prefix for static files
 STATICFILES_DIRS = (        # Additional locations of static files
     os.path.join(django_dir, 'static'),
@@ -82,7 +82,7 @@ STATICFILES_FINDERS = (
 
 
 ##
-## Templates
+# Templates
 ##
 
 TEMPLATE_LOADERS = (
@@ -93,21 +93,21 @@ TEMPLATE_LOADERS = (
 ROOT_URLCONF = 'labs_django.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join( django_dir, 'templates'),
+    os.path.join(django_dir, 'templates'),
 )
 
 ##
-## Application
+# Application
 ##
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-#    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#    'django.core.context_processors.request',
+    #    'django.core.context_processors.request',
 )
 
 WSGI_APPLICATION = 'labs_django.wsgi.application'
@@ -139,7 +139,7 @@ INSTALLED_APPS = (
 )
 
 ##
-## Logging
+# Logging
 ##
 
 # A sample logging configuration. The only tangible logging
@@ -171,11 +171,11 @@ LOGGING = {
     }
 }
 
-LOGDIR  = os.path.join(project_dir, 'log')
-LOGFILE = os.path.join(LOGDIR, 'dre.log' )
+LOGDIR = os.path.join(project_dir, 'log')
+LOGFILE = os.path.join(LOGDIR, 'dre.log')
 
 ##
-## LOCAL
+# LOCAL
 ##
 
 try:

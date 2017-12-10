@@ -14,6 +14,7 @@ from pysvg.structure import *
 from pysvg.style import *
 from pysvg.text import *
 
+
 class ShapeBuilder:
     """
     Helper class that creates commonly used objects and shapes with predefined styles and
@@ -37,7 +38,7 @@ class ShapeBuilder:
         @param fill:  color with which to fill the element (default: no filling)
         @return:  a circle object
         """
-        style_dict = {'fill':fill, 'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'fill': fill, 'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         c = circle(cx, cy, r)
         c.set_style(myStyle.getStyle())
@@ -62,7 +63,7 @@ class ShapeBuilder:
         @param fill:  color with which to fill the element (default: no filling)
         @return:  an ellipse object
         """
-        style_dict = {'fill':fill, 'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'fill': fill, 'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         e = ellipse(cx, cy, rx, ry)
         e.set_style(myStyle.getStyle())
@@ -91,7 +92,7 @@ class ShapeBuilder:
         @param fill:  color with which to fill the element (default: no filling)
         @return:  a rect object
         """
-        style_dict = {'fill':fill, 'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'fill': fill, 'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         r = rect(x, y, width, height, rx, ry)
         r.set_style(myStyle.getStyle())
@@ -110,7 +111,7 @@ class ShapeBuilder:
         @param fill:  color with which to fill the element (default: no filling)
         @return:  a polygon object
         """
-        style_dict = {'fill':fill, 'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'fill': fill, 'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         p = polygon(points=points)
         p.set_style(myStyle.getStyle())
@@ -127,12 +128,11 @@ class ShapeBuilder:
         @param stroke:  color with which to draw the outer limits
         @return:  a polyline object
         """
-        style_dict = {'fill':'none', 'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'fill': 'none', 'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         p = polyline(points=points)
         p.set_style(myStyle.getStyle())
         return p
-
 
     def createLine(self, x1, y1, x2, y2, strokewidth=1, stroke="black"):
         """
@@ -151,7 +151,7 @@ class ShapeBuilder:
         @param stroke:  color with which to draw the outer limits
         @return:  a line object
         """
-        style_dict = {'stroke-width':strokewidth, 'stroke':stroke}
+        style_dict = {'stroke-width': strokewidth, 'stroke': stroke}
         myStyle = StyleBuilder(style_dict)
         l = line(x1, y1, x2, y2)
         l.set_style(myStyle.getStyle())
@@ -170,7 +170,6 @@ class ShapeBuilder:
         return points
 
 
-
 ######################################################################
 # Style Builder. Utility class to create styles for your shapes etc.
 ######################################################################
@@ -183,12 +182,12 @@ class StyleBuilder:
     3) create the shape (element) you want
     4) call set_style on the element with "builder.getStyle()" as parameter
     """
+
     def __init__(self, aStyle_dict=None):
         if aStyle_dict == None:
             self.style_dict = {}
         else:
             self.style_dict = aStyle_dict
-
 
     # tested below
     def setFontFamily(self, fontfamily):
@@ -203,7 +202,7 @@ class StyleBuilder:
     def setFontWeight(self, fontweight):
         self.style_dict["font-weight"] = fontweight
 
-    #tested
+    # tested
     def setFilling(self, fill):
         self.style_dict["fill"] = fill
 
@@ -219,22 +218,26 @@ class StyleBuilder:
     def setStroke(self, stroke):
         self.style_dict["stroke"] = stroke
 
-    #untested below
+    # untested below
     def setStrokeDashArray(self, strokedasharray):
         self.style_dict["stroke-dasharray"] = strokedasharray
+
     def setStrokeDashOffset(self, strokedashoffset):
         self.style_dict["stroke-dashoffset"] = strokedashoffset
+
     def setStrokeLineCap(self, strikelinecap):
         self.style_dict["stroke-linecap"] = strikelinecap
+
     def setStrokeLineJoin(self, strokelinejoin):
         self.style_dict["stroke-linejoin"] = strokelinejoin
+
     def setStrokeMiterLimit(self, strokemiterlimit):
         self.style_dict["stroke-miterlimit"] = strokemiterlimit
+
     def setStrokeOpacity(self, strokeopacity):
         self.style_dict["stroke-opacity"] = strokeopacity
 
-
-    #is used to provide a potential indirect value (currentColor) for the 'fill', 'stroke', 'stop-color' properties.
+    # is used to provide a potential indirect value (currentColor) for the 'fill', 'stroke', 'stop-color' properties.
     def setCurrentColor(self, color):
         self.style_dict["color"] = color
 
@@ -245,7 +248,7 @@ class StyleBuilder:
     def setStopOpacity(self, stopopacity):
         self.style_dict["stop-opacity"] = stopopacity
 
-    #rendering properties
+    # rendering properties
     def setColorRendering(self, colorrendering):
         self.style_dict["color-rendering"] = colorrendering
 
@@ -264,7 +267,7 @@ class StyleBuilder:
     def setSolidOpacity(self, solidopacity):
         self.style_dict["solid-opacity"] = solidopacity
 
-    #Viewport properties
+    # Viewport properties
     def setVectorEffect(self, vectoreffect):
         self.style_dict["vector-effect"] = vectoreffect
 
@@ -284,12 +287,11 @@ class StyleBuilder:
     def setTextAnchor(self, textanchor):
         self.style_dict["text-anchor"] = textanchor
 
-    #def getStyleDict(self):
+    # def getStyleDict(self):
     #      return self.style_dict
 
-
     def getStyle(self):
-        string = ''#style="'
+        string = ''  # style="'
         for key, value in self.style_dict.items():
             if value <> None and value <> '':
                 string += str(key) + ':' + str(value) + '; '
@@ -298,6 +300,8 @@ class StyleBuilder:
 ######################################################################
 # Transform Builder. Utility class to create transformations for your shapes etc.
 ######################################################################
+
+
 class TransformBuilder:
     """
       Class to create a transform string for those not familiar with svg attribute names.
@@ -307,10 +311,11 @@ class TransformBuilder:
       3) create the shape (element) you want
       4) call set_transform on the element with "builder.getTransform()" as parameter
     """
+
     def __init__(self):
         self.transform_dict = {}
 
-    #def setMatrix(self, matrix):
+    # def setMatrix(self, matrix):
     #    self.transform_dict["matrix"] = 'matrix(%s)' % matrix
 
     def setMatrix(self, a, b, c, d, e, f):
@@ -328,10 +333,10 @@ class TransformBuilder:
     def setTranslation(self, translate):
         self.transform_dict["translate"] = 'translate(%s)' % (translate)
 
-    #def setTranslation(self, x, y=0):
+    # def setTranslation(self, x, y=0):
     #    self.transform_dict["translate"] = 'translate(%s %s)' % (x, y)
 
-    #def setScaling(self, scale):
+    # def setScaling(self, scale):
     #    self.transform_dict["scale"] = 'scale(%s)' % (scale)
 
     def setScaling(self, x=None, y=None):
@@ -347,11 +352,11 @@ class TransformBuilder:
     def setSkewX(self, skewX):
         self.transform_dict["skewX"] = 'skewX(%s)' % (skewX)
 
-    #def getTransformDict(self):
+    # def getTransformDict(self):
     #  return self.transform_dict
 
     def getTransform(self):
-        string = ''#style="'
+        string = ''  # style="'
         for key, value in self.transform_dict.items():
             if value <> None and value <> '':
                 #string+=str(key)+':'+str(value)+'; '

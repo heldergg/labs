@@ -8,18 +8,18 @@ from django.views.generic import TemplateView
 from devaluationapp import views
 
 urlpatterns = [
-        # Calculate the exchange rates
-        url(r'^$', views.devaluation_calc, name='devaluation_calc'),
+    # Calculate the exchange rates
+    url(r'^$', views.devaluation_calc, name='devaluation_calc'),
 
-        ##
-        # Static pages
+    ##
+    # Static pages
 
-        # Notes:
-        url(r'^notes/$',
-            TemplateView.as_view(template_name='devaluation_notes.html'),
-            name='devaluation_notes'),
-        # About:
-        url(r'^about/$',
-            TemplateView.as_view(template_name='devaluation_about.html'),
-            name='devaluation_about'),
-        ]
+    # Notes:
+    url(r'^notes/$',
+        TemplateView.as_view(template_name='devaluation_notes.html'),
+        name='devaluation_notes'),
+    # About:
+    url(r'^about/$',
+        TemplateView.as_view(template_name='devaluation_about.html'),
+        name='devaluation_about'),
+]

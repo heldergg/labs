@@ -8,18 +8,18 @@ from django.views.generic import TemplateView
 from exchangeapp import views
 
 urlpatterns = [
-        # Calculate the exchange rates
-        url(r'^$', views.exchange_calc, name='exchange_calc'),
+    # Calculate the exchange rates
+    url(r'^$', views.exchange_calc, name='exchange_calc'),
 
-        ##
-        # Static pages
+    ##
+    # Static pages
 
-        # Notes:
-        url(r'^notes/$',
-            TemplateView.as_view(template_name='exchange_notes.html'),
-            name='exchange_notes'),
-        # About:
-        url(r'^about/$',
-            TemplateView.as_view(template_name='exchange_about.html'),
-            name='exchange_about'),
-        ]
+    # Notes:
+    url(r'^notes/$',
+        TemplateView.as_view(template_name='exchange_notes.html'),
+        name='exchange_notes'),
+    # About:
+    url(r'^about/$',
+        TemplateView.as_view(template_name='exchange_about.html'),
+        name='exchange_about'),
+]

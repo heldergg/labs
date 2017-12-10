@@ -7,17 +7,18 @@ For licensing information please refer to license.txt
 from attributes import CoreAttrib, XLinkAttrib
 from core import BaseElement
 
-  
-         
+
 class script(BaseElement, CoreAttrib, XLinkAttrib):
     """
     Class representing the script element of an svg doc.
     """
+
     def __init__(self, **kwargs):
-        BaseElement.__init__(self,'script')
+        BaseElement.__init__(self, 'script')
         self.setKWARGS(**kwargs)
-    
+
     def set_type(self, type):
-        self._attributes['type']=type
+        self._attributes['type'] = type
+
     def get_type(self):
         return self._attributes.get('type')

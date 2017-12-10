@@ -96,6 +96,7 @@ verbose = True
 # Errors
 ##
 
+
 class EndOfLegislatureError(Exception):
     pass
 
@@ -103,11 +104,13 @@ class EndOfLegislatureError(Exception):
 # Scraper
 ##
 
+
 class ParlamentoConn:
     '''
     Establishes the connection to parlmento.pt and keeps the session
     information.
     '''
+
     def __init__(self):
         session = requests.Session()
         session.headers.update({'User-Agent': USERAGENT, })
@@ -125,6 +128,7 @@ class ParlamentoIndex:
     when no more pages are available, jumping to the previous session and
     repeating the process.
     '''
+
     def __init__(self, legislature=None):
         # Open the connection
         self.connection = ParlamentoConn()
@@ -146,8 +150,8 @@ class ParlamentoIndex:
 
     def get_legislatures(self):
         return [lg['value']
-                    for lg in self.soup.findAll('option')
-                        if lg['value']]
+                for lg in self.soup.findAll('option')
+                if lg['value']]
 
     def page(self):
         table = self.soup.find('table', {'class': 'ARTabResultados'})
@@ -160,14 +164,14 @@ class ParlamentoIndex:
             except KeyError:
                 schedule_url = ''
             yield {
-                   'legislature': self.current_legislature,
-                   'date': datetime.datetime.strptime(
-                       cells[0].a.renderContents(), '%Y-%m-%d'),
-                   'attendance_bid': int(cells[0].a['href'].split('=')[1]),
-                   'number': int(cells[1].a.renderContents()),
-                   'type': cells[2].renderContents(),
-                   'schedule_url': schedule_url
-                   }
+                'legislature': self.current_legislature,
+                'date': datetime.datetime.strptime(
+                    cells[0].a.renderContents(), '%Y-%m-%d'),
+                'attendance_bid': int(cells[0].a['href'].split('=')[1]),
+                'number': int(cells[1].a.renderContents()),
+                'type': cells[2].renderContents(),
+                'schedule_url': schedule_url
+            }
 
     def get_form_values(self, switch_legislature=False):
         form = self.soup.find('form', {'id': 'aspnetForm'})
@@ -176,7 +180,7 @@ class ParlamentoIndex:
         for el in form_input:
             if el['id'] != 'pesquisa':
                 if (el['name'] == (FORMID + 'btnPesquisar') and
-                    not switch_legislature):
+                        not switch_legislature):
                     continue
                 try:
                     form_values[el['name']] = el['value']
@@ -260,9 +264,9 @@ def attendance_read(meeting):
                              'ARTabResultadosLinhaImpar']}):
         cells = line.find_all('td')
         yield {
-               'name': cells[0].a.renderContents(),
-               'mp_bid': int(cells[0].a['href'].split('=')[1]),
-               'party': cells[1].span.renderContents(),
-               'status': cells[2].span.renderContents(),
-               'reason': cells[3].span.renderContents(),
-               }
+            'name': cells[0].a.renderContents(),
+            'mp_bid': int(cells[0].a['href'].split('=')[1]),
+            'party': cells[1].span.renderContents(),
+            'status': cells[2].span.renderContents(),
+            'reason': cells[3].span.renderContents(),
+        }
