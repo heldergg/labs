@@ -149,21 +149,29 @@ div#menu_back {
 /* Project list table */
 
 .main_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   margin: 1em;
 }
 
-.main_list th {
+.list_item {
+  width: 445px;
+}
+
+.left_item {
   border:  1px solid darkgray;
   border-radius: 0.5em;
   background-color: whitesmoke;
-  padding: 1em;
+  width: 200px;
+  padding: 10px;
+  float: left;
 }
 
-.main_list td {
-  color: #7c4900;
-  padding: 0em 0.5em 0.5em 0.5em;
-  vertical-align: top;
-  width: 50%;
+.right_item {
+  width: 200px;
+  padding: 0 10px 10px 10px;
+  float: left;
 }
 
 .main_list a {

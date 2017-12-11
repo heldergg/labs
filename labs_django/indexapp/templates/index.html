@@ -11,55 +11,47 @@
 <li><a href="{% url 'about' %}">Acerca</a>
 {% endblock %}
 
-<!-- TODO: as soon as firefox gets grid layout the table should be 
+<!-- TODO: as soon as firefox gets grid layout the table should be
            suppressed -->
 
 {% block body_content %}
 
-<table class="main_list">
-  <tr>
-    <th>
+<div class="main_list">
+  <div class="list_item">
+    <div class="left_item">
       <a href="{% url 'hc_results' %}">
         <img src="{% static 'img/hc_logo.svg' %}" title="Resultados eleições legislativas" width="200px">
       <a>
-    </th>
-    <td>
+    </div>
+    <div class="right_item">
       <a href="{% url 'hc_results' %}">Parlamento</a>
       <p>Distribuição dos deputados em cada legislatura e simulação de possíveis distribuições de deputados de acordo com vários parâmetros;
-    </td>
+    </div>
+  </div>
 
-    <th>
+  <div class="list_item">
+    <div class="left_item">
       <a href="{% url 'exchange_calc' %}"><img src="{% static 'img/change_logo.svg' %}" title="Câmbios do Banco de Portugal" width="200px"><a>
-    </th>
-    <td>
+    </div>
+    <div class="right_item">
       <a href="{% url 'exchange_calc' %}">Câmbios do Banco de Portugal</a>
       <p>Câmbios entre mais de 40 moedas de acordo com o publicado diariamente pelo Banco de Portugal.
-    </td>
-  </tr>
+    </div>
+  </div>
 
-  <tr>
-    <th>
+  <div class="list_item">
+    <div class="left_item">
       <a href="{% url 'devaluation_calc' %}"><img src="{% static 'img/deval_logo.svg' %}" title="Desvalorização da moeda" width="200px"><a>
-    </th>
-    <td>
+    </div>
+    <div class="right_item">
       <a href="{% url 'devaluation_calc' %}">Desvalorização da moeda</a>
       <p>Ao longo do tempo a moeda tem tendência a perder o seu valor. Nesta área pode descobrir o valor de uma determinada quantidade de Euros desde 1903 até à actualidade.
-    </td>
+    </div>
+  </div>
+</div>
 <!--
-    <th>
-    </th>
-    <td>
       <a>Gerador de NBIs</a>
-    </td> -->
-  </tr>
-<!--
-  <tr>
-    <th>
-    </th>
-    <td>
       <a>Gerador de NIFs</a>
-    </td>
-  </tr> -->
-</table>
+-->
 
 {% endblock %}
