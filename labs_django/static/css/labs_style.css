@@ -20,6 +20,16 @@ a, img {
 
 /* Main Menu */
 
+div#menu_back {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+}
+
 #header_menu {
   float:right;
   position:absolute;
@@ -40,6 +50,7 @@ a, img {
   border-style: solid;
   border-color: #ffebce;
   border-width: 0 1px 1px 1px;
+  z-index: 150;
 }
 
 #main_menu ul {
