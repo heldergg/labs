@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Faltas na Assembleia da República{% endblock %}
+
+{% block print_header %}Faltas na Assembleia da República{% endblock %}</p>
+
+{% block inpage_title %}Faltas na Assembleia da República{% endblock %}
+
+{% block base_header %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/exchange_style.css' %}">
+  <meta name="keywords" content="Assembleia da República, Parlamento, Deputados, parlamento.pt, dados abertos, Faltas">
+  <meta name="description" content="Os dados do parlamento.pt estão disponíveis para todos, mas num formato que torna a análise especialmente difícil. Reunimos neste site os dados sobre as presenças dos deputados num formato aberto e fácil de trabalhar.">
+{% endblock %}
+
+{% block main_menu %}
+<li><a href="{% url 'index' %}">Página inicial</a>
+<li><hr>
+<li><a href="{% url 'timeclock_index' %}">Índice</a>
+<li><a href="{% url 'timeclock_about' %}">Acerca</a>
+{% endblock %}
+
+{% block screen_footer %}
+    <p>[ <a href="{% url 'index' %}">Pagina Inicial</a> ]
+{% endblock %}

@@ -11,17 +11,13 @@
 <li><a href="{% url 'about' %}">Acerca</a>
 {% endblock %}
 
-<!-- TODO: as soon as firefox gets grid layout the table should be
-           suppressed -->
-
 {% block body_content %}
-
 <div class="main_list">
   <div class="list_item">
     <div class="left_item">
       <a href="{% url 'hc_results' %}">
         <img src="{% static 'img/hc_logo.svg' %}" title="Resultados eleições legislativas" width="200px">
-      <a>
+      </a>
     </div>
     <div class="right_item">
       <a href="{% url 'hc_results' %}">Parlamento</a>
@@ -31,7 +27,7 @@
 
   <div class="list_item">
     <div class="left_item">
-      <a href="{% url 'exchange_calc' %}"><img src="{% static 'img/change_logo.svg' %}" title="Câmbios do Banco de Portugal" width="200px"><a>
+      <a href="{% url 'exchange_calc' %}"><img src="{% static 'img/change_logo.svg' %}" title="Câmbios do Banco de Portugal" width="200px"></a>
     </div>
     <div class="right_item">
       <a href="{% url 'exchange_calc' %}">Câmbios do Banco de Portugal</a>
@@ -41,11 +37,21 @@
 
   <div class="list_item">
     <div class="left_item">
-      <a href="{% url 'devaluation_calc' %}"><img src="{% static 'img/deval_logo.svg' %}" title="Desvalorização da moeda" width="200px"><a>
+      <a href="{% url 'devaluation_calc' %}"><img src="{% static 'img/deval_logo.svg' %}" title="Desvalorização da moeda" width="200px"></a>
     </div>
     <div class="right_item">
       <a href="{% url 'devaluation_calc' %}">Desvalorização da moeda</a>
       <p>Ao longo do tempo a moeda tem tendência a perder o seu valor. Nesta área pode descobrir o valor de uma determinada quantidade de Euros desde 1903 até à actualidade.
+    </div>
+  </div>
+
+  <div class="list_item">
+    <div class="left_item">
+      <a href="{% url 'timeclock_index' %}"><img title="By SimpleIcon http://www.simpleicon.com/ (http://www.flaticon.com/packs/simpleicon-business) [CC BY 3.0 (http://creativecommons.org/licenses/by/3.0)], via Wikimedia Commons" src="{% static 'img/timeclock_logo.svg' %}" alt="Faltas no Parlamento" width="200px"></a>
+    </div>
+    <div class="right_item">
+      <a href="{% url 'timeclock_index' %}">Faltas no Parlamento</a>
+      <p>Os dados do <a href="http://parlamento.pt">parlamento.pt</a> estão disponíveis para todos num formato que torna a análise especialmente difícil. Tentamos libertar alguns desses dados para uso dos cidadãos.
     </div>
   </div>
 </div>

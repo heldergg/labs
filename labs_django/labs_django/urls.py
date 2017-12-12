@@ -19,6 +19,9 @@ urlpatterns = [
     # devaluationapp
     url(r'^devaluation/', include('devaluationapp.urls')),
 
+    # timeclockapp
+    url(r'^attendance/', include('timeclockapp.urls')),
+
     # About:
     url(r'^about/$',
         TemplateView.as_view(template_name='about.html'),
