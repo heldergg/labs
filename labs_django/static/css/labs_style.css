@@ -83,16 +83,23 @@ div#menu_back {
 
 #screen_header {
   margin: 0;
+  padding: 0 0 0 10px;
   background-color: #8b0000;
   color: white;
-  height: 4em;
+  min-height: 4em;
   width: 100%;
+}
+
+.header_item {
+  margin: 0;
+  float: left;
 }
 
 #screen_header h1 {
   margin: 0;
   padding: 0;
   padding: 0.5em 0 0 0.5em;
+  float: left;
 }
 
 #screen_header img {
@@ -110,7 +117,7 @@ div#menu_back {
 /* One Column layout */
 .main-content {
   max-width: 65em;
-  margin: auto;
+  margin: auto 10px auto 10px;
 }
 
 .text_box {

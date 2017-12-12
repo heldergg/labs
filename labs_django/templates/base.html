@@ -29,6 +29,11 @@
   <!-- Star Header -->
   <div id="menu_back" class="noprint"></div>
   <div id="screen_header" class="noprint">
+    <div class="header_item">
+      <a href="{% url 'index' %}">
+        <img src="{% static 'img/logo.svg' %}" height="48px">
+      </a>
+    </div>
     <h1>{% block inpage_title %}{% endblock %}</h1>
     <div id="header_menu">
       <img src="{% static 'img/menu.svg' %}" height="48px">
