@@ -14,7 +14,7 @@ class Meeting(models.Model):
     date = models.DateField()
     number = models.IntegerField()
     attendance_bid = models.IntegerField()
-    schedule_url = models.URLField()
+    schedule_url = models.URLField(max_length=400)
     legistature = models.ForeignKey(Legislature)
     meeting_type = models.ForeignKey(MeetingType)
 
