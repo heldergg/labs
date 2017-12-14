@@ -161,7 +161,15 @@ if __name__ == '__main__':
 
             with open(a, 'w') as csvfile:
                 writer = UnicodeWriter(csvfile, quoting=csv.QUOTE_MINIMAL)
-                for attendance in Attendance.objects.all().order_by('meeting__date'):
+                queryset = Attendance.objects.all().order_by('meeting__date')
+                queryset = queryset.select_related('meeting__date')
+                queryset = queryset.select_related('meeting__number')
+                queryset = queryset.select_related('meeting__attendance_bid')
+                queryset = queryset.select_related('meeting__meeting_type__name')
+                queryset = queryset.select_related('member__name')
+                queryset = queryset.select_related('member__mp_bid')
+                queryset = queryset.iterator()
+                for attendance in queryset:
                     meeting = attendance.meeting
                     writer.writerow([
                         meeting.legistature.number,
