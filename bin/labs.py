@@ -168,6 +168,7 @@ if __name__ == '__main__':
                 queryset = queryset.select_related('meeting__meeting_type__name')
                 queryset = queryset.select_related('member__name')
                 queryset = queryset.select_related('member__mp_bid')
+                queryset = queryset.order_by()
                 queryset = queryset.iterator()
                 for attendance in queryset:
                     meeting = attendance.meeting
