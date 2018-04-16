@@ -84,7 +84,8 @@ USERAGENT = ('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101'
 INDEXURL = ('https://www.parlamento.pt/DeputadoGP/Paginas'
             '/reunioesplenarias.aspx')
 
-ATTENDANCEURL = ('https://www.parlamento.pt/DeputadoGP/Paginas/DetalheReuniaoPlenaria.aspx?BID=')
+ATTENDANCEURL = (
+    'https://www.parlamento.pt/DeputadoGP/Paginas/DetalheReuniaoPlenaria.aspx?BID=')
 
 SITEWSDL = 'https://www.parlamento.pt/DeputadoGP/_vti_bin/sites.asmx?wsdl'
 
@@ -99,6 +100,18 @@ verbose = True
 
 class EndOfLegislatureError(Exception):
     pass
+
+##
+# Utils
+##
+
+def chunks(l, n):
+    '''Yield successive n-sized chunks from l.
+    https://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
+    '''
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
 
 ##
 # Scraper
@@ -154,22 +167,25 @@ class ParlamentoIndex:
                 if lg['value']]
 
     def page(self):
-        table = self.soup.find('table', {'class': 'ARTabResultados'})
-        for line in table.find_all(
-                'tr', {'class': ['ARTabResultadosLinhaPar',
-                                 'ARTabResultadosLinhaImpar']}):
-            cells = line.find_all('td')
+        table = self.soup.find(
+            'div',
+            {'id': 'ctl00_ctl52_g_62fda7ea_cd69_4efd_ac'
+                   '24_968bfc19cf59_ctl00_pnlResults'}).find(
+                       'div',
+                       {'class': 'row margin_h0 margin-Top-15'})
+        for date, number, mtype, _ in chunks(
+                table.find_all('div', recursive=False)[:-1], 4):
             try:
-                schedule_url = cells[1].find_all('a')[-1]['href']
+                schedule_url = number.a['href']
             except KeyError:
                 schedule_url = ''
             yield {
                 'legislature': self.current_legislature,
                 'date': datetime.datetime.strptime(
-                    cells[0].a.renderContents(), '%Y-%m-%d'),
-                'attendance_bid': int(cells[0].a['href'].split('=')[1]),
-                'number': int(cells[1].a.renderContents()),
-                'type': cells[2].renderContents(),
+                    date.a.renderContents(), '%Y-%m-%d'),
+                'attendance_bid': int(date.a['href'].split('=')[1]),
+                'number': int(number.a.renderContents()),
+                'type': mtype.find_all('div')[-1].renderContents(),
                 'schedule_url': schedule_url
             }
 
@@ -189,13 +205,15 @@ class ParlamentoIndex:
 
         form_values[FORMID + 'ddlLegislatura'] = self.current_legislature
         if switch_legislature:
-            form_values['ctl00$ScriptManager'] = FORMID + 'pnlUpdate|' + FORMID + 'btnPesquisar'
+            form_values['ctl00$ScriptManager'] = FORMID + \
+                'pnlUpdate|' + FORMID + 'btnPesquisar'
             form_values['__EVENTARGUMENT'] = ''
             form_values['__EVENTTARGET'] = ''
         else:
             form_values['__EVENTARGUMENT'] = 'Page$%d' % self.next_page
             form_values['__EVENTTARGET'] = FORMID + 'gvResults'
-            form_values['ctl00$ScriptManager'] = (FORMID + 'pnlUpdate|' + FORMID + 'gvResults')
+            form_values['ctl00$ScriptManager'] = (
+                FORMID + 'pnlUpdate|' + FORMID + 'gvResults')
 
         # Get the digest necessary to post the query
         # https://msdn.microsoft.com/en-us/library/dd930042(v=office.12).aspx
@@ -239,7 +257,8 @@ class ParlamentoIndex:
             self.next_page = 2
             if verbose:
                 print('* Switching legislature.')
-                print('  Legislature %s, Read page 1' % self.current_legislature)
+                print('  Legislature %s, Read page 1' %
+                      self.current_legislature)
 
     def meetings(self):
         while True:
@@ -258,15 +277,16 @@ def attendance_read(meeting):
     request = requests.get(url, verify=False)
     html = request.text
     soup = BeautifulSoup(html, 'lxml')
-    table = soup.find('table', {'class': 'ARTabResultados'})
-    for line in table.find_all(
-            'tr', {'class': ['ARTabResultadosLinhaPar',
-                             'ARTabResultadosLinhaImpar']}):
-        cells = line.find_all('td')
+    table = soup.find(
+        'div',
+        {'id': 'ctl00_ctl52_g_6319d967_bcb6_4ba9'
+               '_b9fc_c9bb325b19f1_ctl00_pnlDetalhe'})
+    for mp, party, status, reason, _ in chunks(
+            table.find_all('div', recursive=False)[2:], 5):
         yield {
-            'name': cells[0].a.renderContents(),
-            'mp_bid': int(cells[0].a['href'].split('=')[1]),
-            'party': cells[1].span.renderContents(),
-            'status': cells[2].span.renderContents(),
-            'reason': cells[3].span.renderContents(),
+            'name': mp.a.renderContents(),
+            'mp_bid': int(mp.a['href'].split('=')[1]),
+            'party': party.span.renderContents(),
+            'status': status.span.renderContents(),
+            'reason': reason.span.renderContents(),
         }
