@@ -123,6 +123,7 @@ if __name__ == '__main__':
                         print('Skipping %s meeting' % meeting.date.isoformat())
                     if verbose and update:
                         print('Update done')
+                    # If updating, terminate on the first repeated record
                     if update:
                         break
                     continue
